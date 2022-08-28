@@ -6,7 +6,15 @@
 ### 入门：
 > 启动服务器：
 
-``SimpleServerBootstrap.run(启动类.class,端口号);``
+```java
+//扫描路径
+@ScannerPath("com.yuuko.test")
+public class App {
+    public static void main(String[] args) {
+        SimpleServerBootstrap.run(App.class,2333);
+    }
+}
+```
 
 > HelloWorld:
 ```java
