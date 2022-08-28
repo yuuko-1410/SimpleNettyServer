@@ -37,6 +37,7 @@ String login(@RequestBody User user){
 配置拦截器：
 
 ```java
+//使用@Config启用该配置
 @Config
 public class MyFilterConfig implements BaseFilterConfig {
     @Override
