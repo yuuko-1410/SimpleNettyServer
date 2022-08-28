@@ -26,7 +26,7 @@ public class BaseController {
     }
 }
 ```
-在浏览器输入``localhost:端口/hello``浏览器正常输出Hello World
+在浏览器输入``localhost:2333/hello``浏览器正常输出Hello World
 > 请求参数获取：
 
 在接口参数中使用``@RequestBody``注解，支持Map类型与实体类类型的接收
