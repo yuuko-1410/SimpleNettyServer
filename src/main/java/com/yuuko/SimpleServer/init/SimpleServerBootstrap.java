@@ -34,23 +34,29 @@ public class SimpleServerBootstrap {
         ChannelFuture channelFuture = new ServerBootstrap()
                 .group(new NioEventLoopGroup(), new NioEventLoopGroup())
                 .channel(NioServerSocketChannel.class)
+                .option(ChannelOption.SO_BACKLOG, 99999)
+                .childOption(ChannelOption.SO_KEEPALIVE, true)
                 .childHandler(new ChannelInitializer<SocketChannel>() {
                     @Override
                     protected void initChannel(SocketChannel channel) {
                         channel.pipeline()
-                                .addLast( new HttpRequestDecoder())
-                                .addLast( new HttpObjectAggregator(Integer.MAX_VALUE))
-                                .addLast( new ChannelInboundHandlerAdapter() {
+                                .addLast(new HttpRequestDecoder())
+                                .addLast(new HttpObjectAggregator(Integer.MAX_VALUE))
+                                .addLast(new ChannelInboundHandlerAdapter() {
                                     @Override
                                     public void channelRead(ChannelHandlerContext ctx, Object msg) {
-                                        FullHttpRequest request = (FullHttpRequest) msg;
-                                        DefaultFullHttpResponse response = RouterConfig.getInstance().routerSelector(request);
-                                        ctx.channel().writeAndFlush(response);
-                                        ctx.channel().close();
+                                        if(ctx.channel().isOpen()){
+                                            FullHttpRequest request = (FullHttpRequest) msg;
+                                            DefaultFullHttpResponse response = RouterConfig.getInstance().routerSelector(request);
+                                            ctx.channel().writeAndFlush(response);
+                                            ctx.channel().close();
+                                        }
+
                                     }
                                 }).addLast( new HttpResponseEncoder());
                     }
                 }).bind(port);
+
 
         //命令行输出
         String msg = "<=================>Server Start<=================>";
